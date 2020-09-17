@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 
-namespace CheckersIA.Model
+namespace CheckersAI.Model
 {
+    //TODO: Implements complex play: multi-capture + promotion + multi-capture
     public static class StateExtension
     {
         public static IEnumerable<State> Next(this State st, bool whiteplay = true)

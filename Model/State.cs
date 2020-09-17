@@ -1,6 +1,6 @@
 using System;
 
-namespace CheckersIA.Model
+namespace CheckersAI.Model
 {
     public enum Piece : byte
     {

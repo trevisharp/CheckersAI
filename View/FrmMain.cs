@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Linq;
 
-namespace CheckersIA.View
+namespace CheckersAI.View
 {
     using Model;
 
