@@ -34,7 +34,6 @@ namespace CheckersIA.View
                         4 * (7 - (e.Location.Y - bmp.Height / 2 + 360) / 90);
                 piece = game.State[origin];
                 game.State[origin] = Piece.Empty;
-                
             };
             pb.MouseMove += delegate (object sender, MouseEventArgs e)
             {
@@ -90,17 +89,17 @@ namespace CheckersIA.View
                                     break;
                                 case Piece.WhiteChecker:
                                     toprec =new Rectangle(rec.X + 5, rec.Y - 5, 70, 70);
-                                    g.FillEllipse(Brushes.White, toprec);
-                                    g.DrawEllipse(piecepen, toprec);
                                     g.FillEllipse(Brushes.White, rec);
                                     g.DrawEllipse(piecepen, rec);
+                                    g.FillEllipse(Brushes.White, toprec);
+                                    g.DrawEllipse(piecepen, toprec);
                                     break;
                                 case Piece.BlackChecker:
                                     toprec =new Rectangle(rec.X + 5, rec.Y - 5, 70, 70);
-                                    g.FillEllipse(Brushes.DarkGray, toprec);
-                                    g.DrawEllipse(piecepen, toprec);
                                     g.FillEllipse(Brushes.DarkGray, rec);
                                     g.DrawEllipse(piecepen, rec);
+                                    g.FillEllipse(Brushes.DarkGray, toprec);
+                                    g.DrawEllipse(piecepen, toprec);
                                     break;
                             }
                         }
@@ -115,14 +114,25 @@ namespace CheckersIA.View
                 if (p.HasValue)
                 {
                     var currec = new Rectangle(p.Value.X - 35, p.Value.Y - 35, 70, 70);
+                    var currectop = new Rectangle(p.Value.X - 30, p.Value.Y - 40, 70, 70);
                     switch (piece)
                     {
                         case Piece.WhiteChecker:
+                            g.FillEllipse(Brushes.White, currec);
+                            g.DrawEllipse(piecepen, currec);
+                            g.FillEllipse(Brushes.White, currectop);
+                            g.DrawEllipse(piecepen, currectop);
+                            break;
                         case Piece.White:
                             g.FillEllipse(Brushes.White, currec);
                             g.DrawEllipse(piecepen, currec);
                             break;
                         case Piece.BlackChecker:
+                            g.FillEllipse(Brushes.DarkGray, currec);
+                            g.DrawEllipse(piecepen, currec);
+                            g.FillEllipse(Brushes.DarkGray, currectop);
+                            g.DrawEllipse(piecepen, currectop);
+                            break;
                         case Piece.Black:
                             g.FillEllipse(Brushes.DarkGray, currec);
                             g.DrawEllipse(piecepen, currec);

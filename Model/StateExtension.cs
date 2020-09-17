@@ -17,7 +17,7 @@ namespace CheckersIA.Model
                 if (st[j] == basic)
                 {
                     oldmcpt = maxcapturecount;
-                    var list = captureBasicNext(st, enemy, enemychecker, j, ref maxcapturecount);
+                    var list = captureBasicNext(st, basic, checker, enemy, enemychecker, j, whiteplay, ref maxcapturecount);
                     if (maxcapturecount > oldmcpt)
                         capturelist.Clear();
                     capturelist.AddRange(list);
@@ -46,10 +46,11 @@ namespace CheckersIA.Model
         {
             List<State> list = new List<State>();
             bool left;
-            int leftp, rightp;
+            int leftp, rightp, old;
             State copy;
             for (int j = 0; j < 32; j++)
             {
+                //Non-Checker Moviment
                 if (st[j] == basic)
                 {
                     left = (j / 4) % 2 == 0;
@@ -58,72 +59,91 @@ namespace CheckersIA.Model
                     if (leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
                     {
                         copy = st.Copy();
-                        copy[leftp] = basic;
+                        //Promotion Logic
+                        if (leftp > 27 && whiteplay)
+                            copy[leftp] = checker;
+                        else if (leftp < 4 && !whiteplay)
+                            copy[leftp] = checker;
+                        else copy[leftp] = basic;
                         copy[j] = Piece.Empty;
                         list.Add(copy);
                     }
                     if (rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
                     {
                         copy = st.Copy();
-                        copy[rightp] = basic;
+                        //Promotion Logic
+                        if (rightp > 27 && whiteplay)
+                            copy[rightp] = checker;
+                        else if (rightp < 4 && !whiteplay)
+                            copy[rightp] = checker;
+                        else copy[rightp] = basic;
                         copy[j] = Piece.Empty;
                         list.Add(copy);
                     }
                 }
+                //Checker Moviment
                 else if (st[j] == checker)
                 {
-                    //Top
+                    //Left-Top
                     left = (j / 4) % 2 == 0;
-                    leftp = j + 4 - (left ? 1 : 0) - (whiteplay ? 0 : 8);
+                    leftp = j + (left ? 3 : 4);
+                    old = j;
                     while (leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
                     {
                         copy = st.Copy();
-                        copy[leftp] = basic;
-                        copy[j] = Piece.Empty;
+                        copy[leftp] = checker;
+                        copy[old] = Piece.Empty;
                         list.Add(copy);
                         
+                        old = leftp;
                         leftp += (left ? leftp + 3 : leftp + 4);
                         left = !left;
                     }
                     
-                    //Bottom
+                    //Left-Bottom
                     left = (j / 4) % 2 == 0;
-                    leftp = j + 4 - (left ? 1 : 0) - (whiteplay ? 0 : 8);
+                    leftp = j - (left ? 4 : 3);
+                    old = j;
                     while (leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
                     {
                         copy = st.Copy();
-                        copy[leftp] = basic;
-                        copy[j] = Piece.Empty;
+                        copy[leftp] = checker;
+                        copy[old] = Piece.Empty;
                         list.Add(copy);
                         
+                        old = leftp;
                         leftp += (left ? leftp - 4 : leftp - 3);
                         left = !left;
                     }
 
-                    //Top
+                    //Right-Top
                     left = (j / 4) % 2 == 0;
-                    rightp = j + 4 - (left ? 1 : 0) - (whiteplay ? 0 : 8);
+                    rightp = j +(left ? 4 : 5);
+                    old = j;
                     while (rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
                     {
                         copy = st.Copy();
-                        copy[rightp] = basic;
-                        copy[j] = Piece.Empty;
+                        copy[rightp] = checker;
+                        copy[old] = Piece.Empty;
                         list.Add(copy);
                         
+                        old = rightp;
                         rightp += (left ? rightp + 4 : rightp + 5);
                         left = !left;
                     }
 
-                    //Bottom
+                    //Right-Bottom
                     left = (j / 4) % 2 == 0;
-                    rightp = j + 4 - (left ? 1 : 0) - (whiteplay ? 0 : 8);
+                    rightp = j - (left ? 4 : 3);
+                    old = j;
                     while (rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
                     {
                         copy = st.Copy();
-                        copy[rightp] = basic;
-                        copy[j] = Piece.Empty;
+                        copy[rightp] = checker;
+                        copy[old] = Piece.Empty;
                         list.Add(copy);
                         
+                        old = rightp;
                         rightp += (left ? rightp - 4 : rightp - 3);
                         left = !left;
                     }
@@ -133,8 +153,9 @@ namespace CheckersIA.Model
         }
 
         //capture for non-checker pieces
-        private static List<State> captureBasicNext(State st, Piece enemy, Piece enemychecker, int p,
-                                            ref int maxcapturecount)
+        private static List<State> captureBasicNext(State st, Piece basic, Piece checker, 
+                                                    Piece enemy, Piece enemychecker, int p,
+                                                    bool whiteplay, ref int maxcapturecount)
         {
             var list = new List<State>();
 
@@ -178,7 +199,12 @@ namespace CheckersIA.Model
                     && (crr[targetp] == enemy || crr[targetp] == enemychecker))
                 {
                     copy = crr.Copy();
-                    copy[newp] = copy[p];
+                    //Promotion Logic
+                    if (newp > 27 && whiteplay)
+                        copy[newp] = checker;
+                    else if (newp < 4 && !whiteplay)
+                        copy[newp] = checker;
+                    else copy[newp] = basic;
                     copy[p] = copy[targetp] = Piece.Empty;
                     stack.Push((copy, 4, capturecount + 1, newp));
                     stack.Push((copy, 3, capturecount + 1, newp));
@@ -228,8 +254,14 @@ namespace CheckersIA.Model
                     do
                     {
                         targetp = left ? targetp + 4 : targetp + 5;
-                        newp = newp + 9;
+                        newp = !left ? targetp + 4 : targetp + 5;
                         left = !left;
+                        //Limite table test
+                        if (targetp > 27 || (targetp % 4 == 3 && (targetp / 4) % 2 == 1))
+                        {
+                            newp = targetp = -1;
+                            break;
+                        }
                     } while(crr[targetp] == Piece.Empty);
                 }
                 else if (dir == 3 && p % 4 > 0 && p < 24) //Move Left-Top
@@ -237,8 +269,14 @@ namespace CheckersIA.Model
                     do
                     {
                         targetp = left ? targetp + 3 : targetp + 4;
-                        newp = newp + 7;
+                        newp = !left ? targetp + 3 : targetp + 4;
                         left = !left;
+                        //Limite table test
+                        if (targetp > 27 || (targetp % 4 == 0 && (targetp / 4) % 2 == 0))
+                        {
+                            newp = targetp = -1;
+                            break;
+                        }
                     } while(crr[targetp] == Piece.Empty);
                 }
                 else if (dir == 2 && p % 4 < 3 && p > 7) //Move Right-Bottom
@@ -246,17 +284,29 @@ namespace CheckersIA.Model
                     do
                     {
                         targetp = left ? targetp - 4 : targetp - 3;
-                        newp = newp - 7 ;
+                        newp = !left ? targetp - 4 : targetp - 3;
                         left = !left;
+                        //Limite table test
+                        if (targetp < 4 || (targetp % 4 == 3 && (targetp / 4) % 2 == 1))
+                        {
+                            newp = targetp = -1;
+                            break;
+                        }
                     } while(crr[targetp] == Piece.Empty);
                 }
-                else if (dir == 1  && p % 4 > 0 && p > 7)//Move Right-Top
+                else if (dir == 1  && p % 4 > 0 && p > 7)//Move Left-Bottom
                 {
                     do
                     {
                         targetp = left ? targetp - 5 : targetp - 4;
-                        newp = newp - 9;
+                        newp = !left ? targetp - 5 : targetp - 4;
                         left = !left;
+                        //Limite table test
+                        if (targetp < 4 || (targetp % 4 == 0 && (targetp / 4) % 2 == 0))
+                        {
+                            newp = targetp = -1;
+                            break;
+                        }
                     } while(crr[targetp] == Piece.Empty);
                 }
                 else newp = targetp = -1;

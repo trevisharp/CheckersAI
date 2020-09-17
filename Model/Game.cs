@@ -24,8 +24,8 @@ namespace CheckersIA.Model
             var next = State.Next(WhiteTime);
             foreach (var state in next)
             {
-                if (state[origin] == newstate[origin] &&
-                    state[target] == newstate[target])
+                if (state[origin] == Piece.Empty &&
+                    state[target] != Piece.Empty)
                 {
                     this.State = state;
                     WhiteTime = !WhiteTime;
