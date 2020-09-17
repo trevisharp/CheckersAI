@@ -6,7 +6,9 @@ using System.Linq;
 namespace CheckersAI.View
 {
     using Model;
-
+    using AI.Majors;
+    using AI.Marshals;
+    //TODO: refatorar
     public class FrmMain : Form
     {
         Bitmap bmp;
@@ -48,6 +50,7 @@ namespace CheckersAI.View
                         4 * (7 - (e.Location.Y - bmp.Height / 2 + 360) / 90);
                 game.State[origin] = piece;
                 game.TryMove(origin, target);
+                game.Play();
                 piece = Piece.Empty;
             };
             this.Controls.Add(pb);
@@ -146,6 +149,13 @@ namespace CheckersAI.View
             };
 
             game = new Game();
+            game.BlackPlayer = new AIPlayer()
+            {
+                Marshal = new HumbleMarshal()
+                {
+                    Major = new ClassicMajor()
+                }
+            };
 
             this.Load += delegate
             {
