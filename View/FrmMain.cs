@@ -16,6 +16,7 @@ namespace CheckersAI.View
         PictureBox pb;
         Timer tm;
         Game game;
+        HumanPlayer player;
 
         public FrmMain()
         {
@@ -28,14 +29,12 @@ namespace CheckersAI.View
 
             Point? p = null;
             Piece piece = Piece.Empty;
-            int origin = -1, target = -1;
             pb.MouseDown += delegate (object sender, MouseEventArgs e)
             {
                 p = e.Location;
-                origin = (e.Location.X - bmp.Width / 2 + 360) / 180 +
+                player.Origin = (e.Location.X - bmp.Width / 2 + 360) / 180 +
                         4 * (7 - (e.Location.Y - bmp.Height / 2 + 360) / 90);
-                piece = game.State[origin];
-                game.State[origin] = Piece.Empty;
+                piece = game.State[player.Origin];
             };
             pb.MouseMove += delegate (object sender, MouseEventArgs e)
             {
@@ -46,11 +45,8 @@ namespace CheckersAI.View
             pb.MouseUp += delegate (object sender, MouseEventArgs e)
             {
                 p = null;
-                target = (e.Location.X - bmp.Width / 2 + 360) / 180 +
+                player.Target = (e.Location.X - bmp.Width / 2 + 360) / 180 +
                         4 * (7 - (e.Location.Y - bmp.Height / 2 + 360) / 90);
-                game.State[origin] = piece;
-                game.TryMove(origin, target);
-                game.Play();
                 piece = Piece.Empty;
             };
             this.Controls.Add(pb);
@@ -148,6 +144,8 @@ namespace CheckersAI.View
                 pb.Image = bmp;
             };
 
+            player = new HumanPlayer();
+
             game = new Game();
             game.BlackPlayer = new AIPlayer()
             {
@@ -156,13 +154,22 @@ namespace CheckersAI.View
                     Major = new ClassicMajor()
                 }
             };
+            game.WhitePlayer = player;
 
-            this.Load += delegate
+            this.Load += async delegate
             {
                 bmp = new Bitmap(pb.Width, pb.Height);
                 pb.Image = bmp;
                 g = Graphics.FromImage(bmp);
                 tm.Start();
+                await game.Play();
+                await game.Play();
+                await game.Play();
+                await game.Play();
+                await game.Play();
+                await game.Play();
+                await game.Play();
+                await game.Play();
             };
         }
     }

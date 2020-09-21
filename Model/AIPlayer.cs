@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CheckersAI.Model
@@ -9,8 +8,8 @@ namespace CheckersAI.Model
     {
         public Marshal Marshal { get; set; }
 
-        public override State ChoosePlay(IEnumerable<State> playlist, bool aswhite = true)
-            => Marshal.Play(playlist.ToArray(), aswhite);
+        public override State ChoosePlay(State initial, bool aswhite = true)
+            => Marshal.Play(initial.Next(aswhite).ToArray(), aswhite);
         
         public void Reestart() => this.Marshal.Reestart();
     }

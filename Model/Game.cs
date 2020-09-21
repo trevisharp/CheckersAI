@@ -28,48 +28,15 @@ namespace CheckersAI.Model
                 State[j] = Piece.Black;
         }
 
-        public PlayResult Play()
+        public async Task<PlayResult> Play()
         {
             if (WhiteTime)
-                this.State = WhitePlayer.ChoosePlay(State.Next(true), true);
-            else this.State = BlackPlayer.ChoosePlay(State.Next(false), false);
+                this.State = await WhitePlayer.ChoosePlayAsync(State, true);
+            else this.State = await BlackPlayer.ChoosePlayAsync(State, false);
             WhiteTime = !WhiteTime;
 
             //Test Win/Lose/Draw conditions
             return PlayResult.Nothing;
         }
-
-        public async Task<PlayResult> PlayAsync()
-        {
-            if (WhiteTime)
-                this.State = await WhitePlayer.ChoosePlayAsync(State.Next(true), true);
-            else this.State = await BlackPlayer.ChoosePlayAsync(State.Next(false), false);
-            WhiteTime = !WhiteTime;
-
-            //Test Win/Lose/Draw conditions
-            return PlayResult.Nothing;
-        }
-
-        public bool TryMove(int origin, int target)
-        {
-            var newstate = State.Copy();
-            newstate[target] = newstate[origin];
-            newstate[origin] = Piece.Empty;
-            var next = State.Next(WhiteTime);
-            foreach (var state in next)
-            {
-                if (state[origin] == Piece.Empty &&
-                    state[target] != Piece.Empty)
-                {
-                    this.State = state;
-                    WhiteTime = !WhiteTime;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public IEnumerable<State> ListMoves()
-            => State.Next(WhiteTime);
     }
 }

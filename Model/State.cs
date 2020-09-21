@@ -2,15 +2,6 @@ using System;
 
 namespace CheckersAI.Model
 {
-    public enum Piece : byte
-    {
-        Empty = 0,
-        White = 1,
-        Black = 2,
-        WhiteChecker = 4,
-        BlackChecker = 8
-    }
-
     public class State
     {
         /*
