@@ -28,6 +28,10 @@ namespace CheckersAI.Model
                 State[j] = Piece.Black;
         }
 
+        /// <summary>
+        /// Execute a single play.
+        /// </summary>
+        /// <returns></returns>
         public async Task<PlayResult> Play()
         {
             if (WhiteTime)
