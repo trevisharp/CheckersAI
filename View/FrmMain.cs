@@ -149,13 +149,13 @@ namespace CheckersAI.View
             game = new Game();
             game.BlackPlayer = new AIPlayer()
             {
-                Marshal = new HumbleMarshal()
+                Marshal = new DeepMarshal()
                 {
                     Major = new ClassicMajor()
                 }
             };
             game.WhitePlayer = player;
-
+            
             this.Load += async delegate
             {
                 bmp = new Bitmap(pb.Width, pb.Height);

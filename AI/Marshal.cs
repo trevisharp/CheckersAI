@@ -6,7 +6,7 @@ namespace CheckersAI.AI
     /// </summary>
     public abstract class Marshal
     {
-        public abstract State Play(State[] states, bool aswhite);
+        public abstract State Play(State initial, bool aswhite);
         public abstract void Reestart();
     }
 }

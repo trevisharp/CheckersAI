@@ -7,8 +7,9 @@ namespace CheckersAI.AI.Marshals
     {
         public Major Major { get; set; }
 
-        public override State Play(State[] states, bool aswhite)
+        public override State Play(State initial, bool aswhite)
         {
+            State[] states = initial.Next(aswhite).ToArray();
             double[] probs = this.Major.Predict(states);
             if (!aswhite)
                 probs = probs.Select(p => 1 - p).ToArray();

@@ -9,7 +9,7 @@ namespace CheckersAI.Model
         public Marshal Marshal { get; set; }
 
         public override State ChoosePlay(State initial, bool aswhite = true)
-            => Marshal.Play(initial.Next(aswhite).ToArray(), aswhite);
+            => Marshal.Play(initial, aswhite);
         
         public void Reestart() => this.Marshal.Reestart();
     }
