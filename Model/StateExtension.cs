@@ -47,7 +47,7 @@ namespace CheckersAI.Model
         {
             List<State> list = new List<State>();
             bool left;
-            int leftp, rightp, old;
+            int leftp, rightp;
             State copy;
             for (int j = 0; j < 32; j++)
             {
@@ -57,7 +57,7 @@ namespace CheckersAI.Model
                     left = (j / 4) % 2 == 0;
                     leftp = j + 4 - (left ? 1 : 0) - (whiteplay ? 0 : 8);
                     rightp = j + 5 - (left ? 1 : 0) - (whiteplay ? 0 : 8);
-                    if (leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
+                    if ((j % 8) != 0 && leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
                     {
                         copy = st.Copy();
                         //Promotion Logic
@@ -69,7 +69,7 @@ namespace CheckersAI.Model
                         copy[j] = Piece.Empty;
                         list.Add(copy);
                     }
-                    if (rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
+                    if (((j + 1) % 8) != 0 && rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
                     {
                         copy = st.Copy();
                         //Promotion Logic
@@ -88,65 +88,57 @@ namespace CheckersAI.Model
                     //Left-Top
                     left = (j / 4) % 2 == 0;
                     leftp = j + (left ? 3 : 4);
-                    old = j;
-                    while (leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
+                    while ((j % 8) != 0 && leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
                     {
                         copy = st.Copy();
                         copy[leftp] = checker;
-                        copy[old] = Piece.Empty;
+                        copy[j] = Piece.Empty;
                         list.Add(copy);
                         
-                        old = leftp;
-                        leftp += (left ? leftp + 3 : leftp + 4);
                         left = !left;
+                        leftp = leftp + (left ? 3 : 4);
                     }
                     
                     //Left-Bottom
                     left = (j / 4) % 2 == 0;
-                    leftp = j - (left ? 4 : 3);
-                    old = j;
-                    while (leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
+                    leftp = j - (left ? 5 : 4);
+                    while ((j % 8) != 0 && leftp > -1 && leftp < 32 && st[leftp] == Piece.Empty)
                     {
                         copy = st.Copy();
                         copy[leftp] = checker;
-                        copy[old] = Piece.Empty;
+                        copy[j] = Piece.Empty;
                         list.Add(copy);
                         
-                        old = leftp;
-                        leftp += (left ? leftp - 4 : leftp - 3);
                         left = !left;
+                        leftp = leftp - (left ? 5 : 4);
                     }
 
                     //Right-Top
                     left = (j / 4) % 2 == 0;
-                    rightp = j +(left ? 4 : 5);
-                    old = j;
-                    while (rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
+                    rightp = j + (left ? 4 : 5);
+                    while (((j + 1) % 8) != 0 && rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
                     {
                         copy = st.Copy();
                         copy[rightp] = checker;
-                        copy[old] = Piece.Empty;
+                        copy[j] = Piece.Empty;
                         list.Add(copy);
                         
-                        old = rightp;
-                        rightp += (left ? rightp + 4 : rightp + 5);
                         left = !left;
+                        rightp = rightp + (left ? 4 : 5);
                     }
 
                     //Right-Bottom
                     left = (j / 4) % 2 == 0;
                     rightp = j - (left ? 4 : 3);
-                    old = j;
-                    while (rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
+                    while (((j + 1) % 8) != 0 && rightp > -1 && rightp < 32 && st[rightp] == Piece.Empty)
                     {
                         copy = st.Copy();
                         copy[rightp] = checker;
-                        copy[old] = Piece.Empty;
+                        copy[j] = Piece.Empty;
                         list.Add(copy);
                         
-                        old = rightp;
-                        rightp += (left ? rightp - 4 : rightp - 3);
                         left = !left;
+                        rightp = rightp - (left ? 4 : 3);
                     }
                 }
             }

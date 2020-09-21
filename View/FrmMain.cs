@@ -162,14 +162,12 @@ namespace CheckersAI.View
                 pb.Image = bmp;
                 g = Graphics.FromImage(bmp);
                 tm.Start();
-                await game.Play();
-                await game.Play();
-                await game.Play();
-                await game.Play();
-                await game.Play();
-                await game.Play();
-                await game.Play();
-                await game.Play();
+
+                PlayResult result;
+                do
+                {
+                    result = await game.Play();
+                } while(result == PlayResult.Nothing);
             };
         }
     }
