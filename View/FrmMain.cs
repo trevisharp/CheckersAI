@@ -1,7 +1,5 @@
-using System.Windows;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Linq;
 
 namespace CheckersAI.View
 {
