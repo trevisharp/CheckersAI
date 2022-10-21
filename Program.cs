@@ -1,24 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using CheckersAI.View;
+using CheckersAI.Model;
+using CheckersAI.AI.Majors;
+using CheckersAI.AI.Marshals;
 
-namespace CheckersAI
+var white = new HumanPlayer();
+var black = new AIPlayer()
 {
-    using View;
-    static class Program
+    Marshal = new DeepMarshal()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
-        }
+        Major = new ClassicMajor()
     }
-}
+};
+
+var game = new CheckerGame(white, black);
+
+game.Open();
